@@ -1,34 +1,118 @@
+'use client';
+
+import { useState } from "react";
 import { ModeToggle } from "@/components/mode-toggle"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Mail, Phone, MapPin, Calendar, Award, Heart, Languages } from "lucide-react"
+import { Mail, Phone, MapPin, Calendar, Award, Heart, Languages, Github, Linkedin } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
+import portfolioData from "./data.json"
+import { scrollToSection } from "./utils"
+import { useEffect } from "react"
+import { PhonePopup } from "@/components/phone-popup"
 
 export default function Home() {
+  const { personalInfo, experience, education, skills, courses, projects, achievements, interests, languages } = portfolioData
+  const [isPhonePopupOpen, setIsPhonePopupOpen] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+      }
+    );
+
+    const sections = document.querySelectorAll('section');
+    sections.forEach((section) => {
+      observer.observe(section);
+    });
+
+    return () => {
+      sections.forEach((section) => {
+        observer.unobserve(section);
+      });
+    };
+  }, []);
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    e.preventDefault();
+    scrollToSection(sectionId);
+  };
+
+  const handleEmailClick = () => {
+    window.location.href = `mailto:${personalInfo.email}`;
+  };
+
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm dark:bg-gray-900 dark:shadow-md">
         <div className="container flex h-16 items-center justify-between">
-          <div className="font-bold text-xl md:text-2xl text-primary">INFANT STANKO F</div>
+          <div className="flex items-center gap-3">
+            <div className="relative h-10 w-10 overflow-hidden rounded-full">
+              <Image
+                src="/images/profile.jpg"
+                alt="Profile"
+                fill
+                className="object-cover"
+                sizes="40px"
+                priority
+              />
+            </div>
+            <div className="font-bold text-xl md:text-2xl text-primary">{personalInfo.name}</div>
+          </div>
           <div className="flex items-center gap-4">
             <nav className="hidden md:flex gap-6">
-              <Link href="#about" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link 
+                href="#about" 
+                className="text-muted-foreground hover:text-primary transition-colors relative group dark:text-gray-300 dark:hover:text-white"
+                onClick={(e) => handleNavClick(e, "about")}
+              >
                 About
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="#experience" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link 
+                href="#experience" 
+                className="text-muted-foreground hover:text-primary transition-colors relative group dark:text-gray-300 dark:hover:text-white"
+                onClick={(e) => handleNavClick(e, "experience")}
+              >
                 Experience
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="#education" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link 
+                href="#education" 
+                className="text-muted-foreground hover:text-primary transition-colors relative group dark:text-gray-300 dark:hover:text-white"
+                onClick={(e) => handleNavClick(e, "education")}
+              >
                 Education
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="#skills" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link 
+                href="#skills" 
+                className="text-muted-foreground hover:text-primary transition-colors relative group dark:text-gray-300 dark:hover:text-white"
+                onClick={(e) => handleNavClick(e, "skills")}
+              >
                 Skills
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="#projects" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link 
+                href="#projects" 
+                className="text-muted-foreground hover:text-primary transition-colors relative group dark:text-gray-300 dark:hover:text-white"
+                onClick={(e) => handleNavClick(e, "projects")}
+              >
                 Projects
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
             </nav>
             <ModeToggle />
@@ -38,34 +122,43 @@ export default function Home() {
 
       <main className="container py-8 space-y-12">
         {/* Hero Section */}
-        <section id="about" className="grid grid-cols-1 lg:grid-cols-3 gap-8 py-8">
+        <section id="about" className="relative grid grid-cols-1 lg:grid-cols-3 gap-8 py-8 transition-all duration-700">
+          {/* Blog Layer Background */}
+          <div className="absolute inset-0 -z-10 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(0,153,255,0.05)_0%,transparent_50%)]"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(0,153,255,0.05)_0%,transparent_50%)]"></div>
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-10 left-10 w-20 h-20 rounded-full bg-primary/20"></div>
+              <div className="absolute top-40 right-10 w-16 h-16 rounded-full bg-primary/20"></div>
+              <div className="absolute bottom-10 left-1/3 w-24 h-24 rounded-full bg-primary/20"></div>
+            </div>
+          </div>
+          
           <div className="lg:col-span-2 space-y-4">
-            <h1 className="text-4xl font-bold text-primary">INFANT STANKO F</h1>
+            <h1 className="text-4xl font-bold text-primary">{personalInfo.name}</h1>
             <div className="flex flex-wrap gap-3 text-muted-foreground">
               <div className="flex items-center gap-1">
                 <MapPin size={16} />
-                <span>Tiruchirappalli</span>
+                <span>{personalInfo.location}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Phone size={16} />
-                <span>9025615730</span>
+                <span>{personalInfo.phone}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Mail size={16} />
-                <span>infantstanko2003@gmail.com</span>
+                <span>{personalInfo.email}</span>
               </div>
             </div>
-            <div className="mt-6">
-              <h2 className="text-2xl font-semibold text-primary mb-3">Executive Summary</h2>
-              <p className="text-foreground">
-                I'm a software developer with strong skills in MERN Stack Development and Next.js, along with solid
-                experience in Java and Python. I know how to use AI tools effectively to speed up development and
-                improve the quality of my work. I've worked on full-stack web projects, building both powerful backends
-                and interactive frontends. I'm good at solving problems, working with teams, and creating smart, modern
-                solutions. I'm looking to join a forward-thinking team where I can use my skills and passion for tech to
-                build great software.
-              </p>
-            </div>
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle className="text-primary">Executive Summary</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-foreground">{personalInfo.summary}</p>
+              </CardContent>
+            </Card>
           </div>
           <div className="lg:col-span-1">
             <Card>
@@ -75,15 +168,15 @@ export default function Home() {
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-3">
                   <Phone className="text-primary" size={20} />
-                  <span>9025615730</span>
+                  <span>{personalInfo.phone}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="text-primary" size={20} />
-                  <span>infantstanko2003@gmail.com</span>
+                  <span>{personalInfo.email}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <MapPin className="text-primary" size={20} />
-                  <span>Tiruchirappalli</span>
+                  <span>{personalInfo.location}</span>
                 </div>
               </CardContent>
             </Card>
@@ -94,49 +187,35 @@ export default function Home() {
         <section id="experience" className="py-8">
           <h2 className="text-3xl font-bold text-primary mb-6">Experience</h2>
           <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-primary">Software Engineer</CardTitle>
-                    <CardDescription>NearTechPod</CardDescription>
+            {experience.map((exp, index) => (
+              <Card key={index}>
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle className="text-primary">{exp.title}</CardTitle>
+                      <CardDescription>{exp.company}</CardDescription>
+                    </div>
+                    <Badge variant="outline" className="flex items-center gap-1">
+                      <Calendar size={14} />
+                      <span>{exp.period}</span>
+                    </Badge>
                   </div>
-                  <Badge variant="outline" className="flex items-center gap-1">
-                    <Calendar size={14} />
-                    <span>15/01/2025 - Till Now</span>
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p>
-                  Working as a Associate Software Developer in this organization and developing website and doing the
-                  allocated tasks
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-primary">Developer Intern & Coding Trainer Intern</CardTitle>
-                    <CardDescription>T4TEQ Software Solutions</CardDescription>
-                  </div>
-                  <Badge variant="outline" className="flex items-center gap-1">
-                    <Calendar size={14} />
-                    <span>20/05/24 - 20/09/24</span>
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Taught and mentored students in programming languages such as C, Java, Python, and more.</li>
-                  <li>Clarified coding doubts and guided students to strengthen their problem-solving skills.</li>
-                  <li>Conducted UI/UX design sessions using tools like Adobe Illustrator, Figma.</li>
-                  <li>Collaborated with peers and students, enhancing team coordination and communication skills.</li>
-                </ul>
-              </CardContent>
-            </Card>
+                </CardHeader>
+                <CardContent>
+                  {exp.description ? (
+                    <p>{exp.description}</p>
+                  ) : exp.responsibilities ? (
+                    <ul className="list-disc pl-5 space-y-1">
+                      {exp.responsibilities.map((resp, idx) => (
+                        <li key={idx}>{resp}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No details available</p>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </section>
 
@@ -144,59 +223,25 @@ export default function Home() {
         <section id="education" className="py-8">
           <h2 className="text-3xl font-bold text-primary mb-6">Education</h2>
           <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-primary">Electronics and Communication Engineering / B.E</CardTitle>
-                    <CardDescription>K. Ramakrishnan College of Engineering</CardDescription>
+            {education.map((edu, index) => (
+              <Card key={index}>
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle className="text-primary">{edu.degree}</CardTitle>
+                      <CardDescription>{edu.institution}</CardDescription>
+                    </div>
+                    <Badge variant="outline" className="flex items-center gap-1">
+                      <Calendar size={14} />
+                      <span>{edu.year}</span>
+                    </Badge>
                   </div>
-                  <Badge variant="outline" className="flex items-center gap-1">
-                    <Calendar size={14} />
-                    <span>2024</span>
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p>7.72 CGPA</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-primary">Higher Secondary School</CardTitle>
-                    <CardDescription>Chelammal Matriculation Higher Secondary School</CardDescription>
-                  </div>
-                  <Badge variant="outline" className="flex items-center gap-1">
-                    <Calendar size={14} />
-                    <span>2020</span>
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p>62%</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-primary">Senior Secondary Education</CardTitle>
-                    <CardDescription>St. James Matriculation Higher Secondary School</CardDescription>
-                  </div>
-                  <Badge variant="outline" className="flex items-center gap-1">
-                    <Calendar size={14} />
-                    <span>2018</span>
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p>73%</p>
-              </CardContent>
-            </Card>
+                </CardHeader>
+                <CardContent>
+                  <p>{edu.score}</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </section>
 
@@ -211,18 +256,7 @@ export default function Home() {
             <TabsContent value="skills">
               <h2 className="text-3xl font-bold text-primary mb-6">Skills</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[
-                  "Core Java Programming",
-                  "Python Programming",
-                  "C Programming",
-                  "SQL",
-                  "Mongo DB",
-                  "Express JS",
-                  "React JS",
-                  "Node JS",
-                  "Next JS",
-                  "Node-RED",
-                ].map((skill, index) => (
+                {skills.map((skill, index) => (
                   <Card key={index} className="overflow-hidden">
                     <CardHeader>
                       <CardTitle className="text-primary">{skill}</CardTitle>
@@ -237,18 +271,7 @@ export default function Home() {
             <TabsContent value="courses">
               <h2 className="text-3xl font-bold text-primary mb-6">Courses</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[
-                  "MERN STACK DEVELOPMENT (at T4TEQ Software Solutions)",
-                  "JAVA Full Stack (by Wipro Talentnext)",
-                  "MERN Stack Development (by PrepInsta)",
-                  "Core JAVA (at T4TEQ Software Solutions)",
-                  "Python (at T4TEQ Software Solutions)",
-                  "Advance C (at T4TEQ Software Solutions)",
-                  "MY SQL (W3 Schools)",
-                  "HTML CSS (at PrepInsta)",
-                  "Salesforce Developer Virtual Internship (by Smart Internz)",
-                  "Carrier Essential in Software Developer (by Microsoft)",
-                ].map((course, index) => (
+                {courses.map((course, index) => (
                   <Card key={index}>
                     <CardContent className="pt-6">
                       <p>{course}</p>
@@ -264,81 +287,16 @@ export default function Home() {
         <section id="projects" className="py-8">
           <h2 className="text-3xl font-bold text-primary mb-6">Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-primary">
-                  IoT based Hospital Management and Patient Caring System [REDIX]
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>
-                  Developed an IoT-based system to monitor patient presence and vital parameters, with cloud integration
-                  for data analysis and automated alerts for threshold breaches; patented this project and also
-                  published IEEE paper.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-primary">FARMGROW</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>
-                  Developed a web application offering a private cloud vault for farmers to securely store personal
-                  property details, Claimed Copyright for this project.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-primary">LEGATEE</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>
-                  Developed a mobile app for beneficiaries to track fund transfers and applied schemes; got selected for
-                  the final round in the Smart India Hackathon (SIH) India-level competition.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-primary">LIBRARY MODULE</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>
-                  Module has interface to user and admin access to lend and return for user, add and report for admin.
-                  Used Structure for Storage in C and ArrayList in JAVA.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-primary">SimplifAi</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>
-                  This is a web portal for an organization for tracking the attendance, work progress like what are the
-                  projects the employee assigned to and what are the tasks they did in it and also salary crediting
-                  options are also in this portal.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-primary">Blog Web App</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>
-                  A web app that is used to see the blogs of several user creations and sharing their thoughts and also
-                  added authentication with Auth0.
-                </p>
-              </CardContent>
-            </Card>
+            {projects.map((project, index) => (
+              <Card key={index}>
+                <CardHeader>
+                  <CardTitle className="text-primary">{project.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>{project.description}</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </section>
 
@@ -348,34 +306,12 @@ export default function Home() {
           <Card>
             <CardContent className="pt-6">
               <ul className="space-y-4">
-                <li className="flex gap-3">
-                  <Award className="text-primary flex-shrink-0 mt-1" size={20} />
-                  <p>
-                    In NearTechPod out of 25 freshers I'm one of the three members chosen to client side project for
-                    working good and completing the tasks on time.
-                  </p>
-                </li>
-                <li className="flex gap-3">
-                  <Award className="text-primary flex-shrink-0 mt-1" size={20} />
-                  <p>
-                    Achieved a perfect score of 600/600 (100%) in the Programming Round of TCS NQT IT and secured an
-                    impressive 74.30% overall, demonstrating exceptional technical expertise and strong aptitude skills.
-                  </p>
-                </li>
-                <li className="flex gap-3">
-                  <Award className="text-primary flex-shrink-0 mt-1" size={20} />
-                  <p>
-                    My project IoT based Hospital Management and Patient Caring System [REDIX] filed for patent now it
-                    got granted.
-                  </p>
-                </li>
-                <li className="flex gap-3">
-                  <Award className="text-primary flex-shrink-0 mt-1" size={20} />
-                  <p>
-                    Project FARMGROW was projected to The Trichy Collector and he forwarded it to CM CELL and also
-                    claimed Copyrights for this project.
-                  </p>
-                </li>
+                {achievements.map((achievement, index) => (
+                  <li key={index} className="flex gap-3">
+                    <Award className="text-primary flex-shrink-0 mt-1" size={20} />
+                    <p>{achievement}</p>
+                  </li>
+                ))}
               </ul>
             </CardContent>
           </Card>
@@ -388,12 +324,7 @@ export default function Home() {
             <Card>
               <CardContent className="pt-6">
                 <ul className="space-y-3">
-                  {[
-                    "Developing Website or Application",
-                    "Learning New Technologies",
-                    "Problem Solving",
-                    "Environmental adaptability",
-                  ].map((interest, index) => (
+                  {interests.map((interest, index) => (
                     <li key={index} className="flex gap-3">
                       <Heart className="text-primary flex-shrink-0 mt-1" size={18} />
                       <p>{interest}</p>
@@ -409,7 +340,7 @@ export default function Home() {
             <Card>
               <CardContent className="pt-6">
                 <ul className="space-y-3">
-                  {["Tamil", "English"].map((language, index) => (
+                  {languages.map((language, index) => (
                     <li key={index} className="flex gap-3">
                       <Languages className="text-primary flex-shrink-0 mt-1" size={18} />
                       <p>{language}</p>
@@ -425,17 +356,53 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t py-6">
         <div className="container flex flex-col md:flex-row justify-between items-center">
-          <p className="text-muted-foreground">© 2025 Infant Stanko F. All rights reserved.</p>
-          <div className="flex gap-4 mt-4 md:mt-0">
-            <Button variant="ghost" size="icon">
+          <div className="flex items-center">
+            <p className="text-muted-foreground font-medium tracking-wide">
+              {personalInfo.name.toUpperCase()}
+            </p>
+          </div>
+          <div className="flex items-center gap-8 mt-4 md:mt-0">
+            <Link 
+              href={personalInfo.github}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Github size={20} />
+            </Link>
+            <Link 
+              href={personalInfo.linkedin}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Linkedin size={20} />
+            </Link>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={handleEmailClick}
+              className="text-muted-foreground hover:text-primary p-0"
+            >
               <Mail size={20} />
             </Button>
-            <Button variant="ghost" size="icon">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => setIsPhonePopupOpen(true)}
+              className="text-muted-foreground hover:text-primary p-0"
+            >
               <Phone size={20} />
             </Button>
           </div>
         </div>
       </footer>
+
+      <PhonePopup
+        phone={personalInfo.phone}
+        isOpen={isPhonePopupOpen}
+        onClose={() => setIsPhonePopupOpen(false)}
+      />
     </div>
   )
 }
