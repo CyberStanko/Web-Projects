@@ -1,0 +1,44 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "dev:debug": "cross-env NODE_OPTIONS='--inspect' next dev",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@auth0/nextjs-auth0": "^3.6.0",
+    "@aws-sdk/client-dynamodb": "^3.738.0",
+    "@aws-sdk/lib-dynamodb": "^3.738.0",
+    "@heroicons/react": "^2.2.0",
+    "@prisma/client": "^6.3.0",
+    "@tailwindcss/forms": "^0.5.10",
+    "@vercel/postgres": "^0.10.0",
+    "auth0": "^4.18.0",
+    "autoprefixer": "10.4.20",
+    "axios": "^1.7.9",
+    "bcrypt": "^5.1.1",
+    "buffer": "^6.0.3",
+    "clsx": "^2.1.1",
+    "crypto-browserify": "^3.12.1",
+    "next": "latest",
+    "next-auth": "5.0.0-beta.25",
+    "postcss": "8.5.1",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-hot-toast": "^2.5.1",
+    "tailwindcss": "3.4.17",
+    "typescript": "5.7.3",
+    "use-debounce": "^10.0.4",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/auth0": "^3.3.10",
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "22.10.7",
+    "@types/react": "19.0.7",
+    "@types/react-dom": "19.0.3",
+    "cross-env": "^7.0.3",
+    "prisma": "^6.3.0"
+  }
+}
